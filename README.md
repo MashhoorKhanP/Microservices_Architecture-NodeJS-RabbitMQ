@@ -28,6 +28,7 @@ Replace `<order-service-pod-name>` and `<product-service-pod-name>` with the act
 - Product Service: [http://localhost:3002](http://localhost:3002)
 
 6. Run the following command to start the application using Skaffold: `skaffold dev`
+
 This command will build and deploy the services defined in the `skaffold.yaml` file.
 
 ## Services
