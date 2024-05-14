@@ -7,7 +7,7 @@ let connection, channel;
 
 (async () => {
   try {
-    const amqpServer = 'amqp://rabbitmq-srv';
+    const amqpServer = 'amqp://rabbitmq-service';
     connection = await amqp.connect(amqpServer);
     channel = await connection.createChannel();
     await channel.assertQueue('product-service-queue', { durable: true });
@@ -49,7 +49,22 @@ router.post('/order-product', async (req, res) => {
 
     const { productIds } = req.body;
     const products = await ProductModel.find({ _id: { $in: productIds } });
+    // Check if any product is out of stock
+    const outOfStockProduct = products.find(product => product.quantity === 0);
+    if (outOfStockProduct) {
+      return res.status(400).json({
+        message: `Product '${outOfStockProduct.name}' is out of stock`
+      });
+    }
 
+    // Update the quantity of each product and save it to the database
+    await Promise.all(products.map(async (product) => {
+      if (product.quantity > 0) {
+        product.quantity -= 1;
+        await product.save();
+      }
+    }));
+    
     await channel.sendToQueue('order-service-queue', Buffer.from(JSON.stringify({ products })));
 
     return res.status(201).json({

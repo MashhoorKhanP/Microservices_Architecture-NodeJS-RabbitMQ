@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      containers:
+        - name: product-service
+          image: mashhoorkhanp/product-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service-srv
+spec:
+  selector:
+    app: product-service
+  ports:
+  - name: product-service
+    protocol: TCP
+    port: 4000
+    targetPort: 4000
