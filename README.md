@@ -6,15 +6,28 @@ This repository contains a simple microservices architecture built using Node.js
 
 To run the application, follow these steps:
 
-1. Clone this repository: 
-  `git clone https://github.com/MashhoorKhanP/Blog_App-MicroServices_Architecture.git`
+1. Clone this repository: `git clone https://github.com/MashhoorKhanP/Blog_App-MicroServices_Architecture.git`
 
-2. Navigate to the project directory: 
-  `cd microservices-nodejs-rabbitmq`
+2. Navigate to the project directory: `cd microservices-nodejs-rabbitmq`
 
-3. Run the following command to start the application using Skaffold:
-  `skaffold dev`
+3. Start the Kubernetes cluster (e.g., minikube, kind, Docker Desktop) if you haven't already.
 
+4. Forward ports to access the services locally using `kubectl port-forward`:
+- For the order-service:
+  ```
+  kubectl port-forward <order-service-pod-name> 3001:3001
+  ```
+- For the product-service:
+  ```
+  kubectl port-forward <product-service-pod-name> 3002:3002
+  ```
+Replace `<order-service-pod-name>` and `<product-service-pod-name>` with the actual names of the pods running the order and product services respectively.
+
+5. Once the port forwarding is set up, you can access the services locally using the following URLs:
+- Order Service: [http://localhost:3001](http://localhost:3001)
+- Product Service: [http://localhost:3002](http://localhost:3002)
+
+6. Run the following command to start the application using Skaffold: `skaffold dev`
 This command will build and deploy the services defined in the `skaffold.yaml` file.
 
 ## Services
